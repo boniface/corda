@@ -11,7 +11,7 @@ A *state* is an immutable object representing a fact known by one or more Corda 
 States can contain arbitrary data, allowing them to represent facts of any kind (e.g. stocks, bonds, loans, KYC data,
 identity information...).
 
-For example, the following state represents an IOU:
+For example, the following state represents an IOU - an agreement that Alice owes Bob an amount X:
 
 .. image:: resources/state.png
 

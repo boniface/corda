@@ -62,6 +62,7 @@ Documentation Contents:
    key-concepts-oracles
    key-concepts-consensus
    key-concepts-notaries
+   key-concepts-time-windows
    key-concepts-flows
    key-concepts-node
    key-concepts-tradeoffs

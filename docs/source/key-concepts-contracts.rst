@@ -4,7 +4,7 @@ Contracts
 .. topic:: Summary
 
    * *A valid transaction must be accepted by the contract of each of its input and output states*
-   * *Contracts are written in a Turing-complete programming language*
+   * *Contracts are written in a JVM programming language (e.g. Java or Kotlin)*
    * *Contract execution is deterministic and its acceptance of a transaction is based on the transaction's contents alone*
 
 Transaction verification
@@ -33,9 +33,9 @@ including:
 * Grouping similar states to validate them as a group (e.g. imposing a rule on the combined value of all the cash
   states)
 
-A transaction that is not contractually valid is not a valid proposal to update the ledger. In this way, contracts
-impose rules on the evolution of states over time that are independent of the willingness of the required signers to
-sign a given transaction.
+A transaction that is not contractually valid is not a valid proposal to update the ledger, and thus can never be
+committed to the ledger. In this way, contracts impose rules on the evolution of states over time that are
+independent of the willingness of the required signers to sign a given transaction.
 
 The contract sandbox
 --------------------
@@ -58,7 +58,8 @@ counterparties.
 
 Peers should therefore check the contents of a transaction before signing it, *even if the transaction is
 contractually valid*, to see whether they agree with the proposed ledger update. A peer is under no obligation to
-sign a transaction just because it is contractually valid.
+sign a transaction just because it is contractually valid. For example, they may be unwilling to take on a loan that
+is too large, or may disagree on the amount of cash offered for an asset.
 
 Oracles
 -------

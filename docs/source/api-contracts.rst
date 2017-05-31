@@ -22,8 +22,8 @@ The ``Contract`` interface is defined as follows:
 
 Where:
 
-* ``verify(tx: TransactionForContract)`` constrains the evolution of states using this contract by restricting which
-  transactions involving states of this type are valid
+* ``verify(tx: TransactionForContract)`` determines whether transactions involving states which reference this
+  contract type are valid
 * ``legalContractReference`` is the hash of the legal prose contract that ``verify`` seeks to express in code
 
 verify()
@@ -35,7 +35,7 @@ considered valid.
 
 ``verify()`` is executed in a sandbox. It does not have access to the enclosing scope, and is not able to access
 the network or perform any other I/O. It only has access to the properties defined on ``TransactionForContract`` when
- deciding whether a transaction is valid.
+establishing whether a transaction is valid.
 
 The two simplest ``verify`` functions are the one that accepts all transactions, and the one that rejects all
 transactions.
@@ -155,11 +155,14 @@ Extracting commands
 ~~~~~~~~~~~~~~~~~~~
 You can use the ``requireSingleCommand()`` helper method to extract commands.
 
-``<C : CommandData> Collection<AuthenticatedObject<CommandData>>.requireSingleCommand(klass: Class<C>)`` asserts that the
-transaction contains exactly one command of type ``T``, and returns it. If there is not exactly one command of this
+``<C : CommandData> Collection<AuthenticatedObject<CommandData>>.requireSingleCommand(klass: Class<C>)`` asserts that
+the transaction contains exactly one command of type ``T``, and returns it. If there is not exactly one command of this
 type in the transaction, an exception is thrown, rejecting the transaction.
 
-Here is an example of using ``requireSingleCommand()`` to extract a transaction's command and using it to fork the
+For ``requireSingleCommand`` to work, all the commands that we wish to match against must be grouped using the same
+marker interface.
+
+Here is an example of using ``requireSingleCommand`` to extract a transaction's command and using it to fork the
 execution of ``verify()``:
 
 .. container:: codeset
@@ -216,10 +219,14 @@ Grouping states
 Suppose we have the following transaction, where 15 USD is being exchanged for 10 GBP:
 
 .. image:: resources/ungrouped-tx.png
+   :scale: 20
+   :align: center
 
 We can imagine that we would like to verify the USD states and the GBP states separately:
 
 .. image:: resources/grouped-tx.png
+   :scale: 20
+   :align: center
 
 ``TransactionForContract`` provides a ``groupStates`` method to allow you to group states in this way:
 

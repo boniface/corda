@@ -11,11 +11,8 @@ Two types of consensus
 ----------------------
 Determining whether a proposed transaction is a valid ledger update involves reaching two types of consensus:
 
-* *Validity consensus*
-* *Uniqueness consensus*
-
-The former should be checked by each required signer before signing a transaction. The latter is checked by a notary
-service.
+* *Validity consensus* - this is checked by each required signer before they sign the transaction
+* *Uniqueness consensus* - this is only checked by a notary service
 
 Validity consensus
 ------------------
@@ -25,10 +22,12 @@ and for every transaction in the transaction chain that generated the inputs to 
 * The transaction is accepted by the contracts of every input and output state
 * The transaction has all the required signatures
 
-It is not enough to only verify the proposed transaction itself - we must verify the transaction chain that
-generated its inputs as well. This is known as *walking the chain*. Suppose, for example, that a party on the network
-proposes a transaction offering to exchange central-bank-issued cash for a bond. We can only be sure that the
-cash represents a valid claim on the central bank if:
+It is not enough to verify the proposed transaction itself. We must also verify every transaction in the chain of
+transactions that led up to the creation of the inputs to the proposed transaction.
+
+This is known as *walking the chain*. Suppose, for example, that a party on the network proposes
+a transaction offering to exchange central-bank-issued cash for a bond. We can only be sure that the cash represents
+a valid claim on the central bank if:
 
 * The cash was issued by the central bank in a valid issuance transaction
 * Every subsequent transaction in which the cash changed hands was also valid
@@ -38,7 +37,9 @@ The only way to be sure of both conditions is to walk the transaction's chain. W
 .. image:: resources/validation-consensus.png
 
 When verifying a proposed transaction, a given party may not have every transaction in the transaction chain that they
-need to verify. In this case, they can request the missing transactions from the transaction proposer(s).
+need to verify. In this case, they can request the missing transactions from the transaction proposer(s). The
+transaction proposer(s) will always have the full transaction chain, since they would have requested it when
+verifying the transaction that created the proposed transaction's input states.
 
 Uniqueness consensus
 --------------------

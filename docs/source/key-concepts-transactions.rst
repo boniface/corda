@@ -10,9 +10,10 @@ Transactions
      * *It is contractually valid*
      * *It is signed by the required parties*
 
-*Transactions* are objects that update the ledger by consuming zero or more existing ledger states (the
-*inputs*) and producing zero or more new ledger states (the *outputs*). They represent a single link in the state
-sequences seen in :doc:`key-concepts-states`.
+Corda uses a *UTXO* (unspent transaction output) model where every state on the ledger is immutable. The ledger
+evolves over time by applying *transactions*, which update the ledger by marking zero or more existing ledger states
+as historic (the *inputs*) and producing zero or more new ledger states (the *outputs*). Transactions represent a
+single link in the state sequences seen in :doc:`key-concepts-states`.
 
 Here is an example of an update transaction, with two inputs and two outputs:
 
@@ -139,5 +140,5 @@ In some cases, we want a transaction proposed to only be approved during a certa
 * An option can only be exercised after a certain date
 * A bond may only be redeemed before its expiry date
 
-In such cases, we can add a *timestamp* to the transaction. Time-windows specify the time window during which the
-transaction can be committed. We discuss timestamps in the section on :doc:`key-concepts-notaries`.
+In such cases, we can add a *time-window* to the transaction. Time-windows specify the time window during which the
+transaction can be committed. We discuss time-windows in the section on :doc:`key-concepts-time-windows`.

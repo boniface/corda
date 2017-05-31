@@ -6,9 +6,7 @@ States
 ContractState
 -------------
 
-All Corda states are JVM classes that directly or indirectly implement ``ContractState``.
-
-The ``ContractState`` interface is defined as follows:
+In Corda, states are classes that implement ``ContractState``. The ``ContractState`` interface is defined as follows:
 
 .. container:: codeset
 
@@ -23,13 +21,13 @@ Where:
 * ``participants`` is a ``List`` of the ``PublicKey`` of each party involved in this state
 
 ContractState sub-interfaces
-------------------------------
+----------------------------
 There are two common sub-interfaces of ``ContractState``:
 
 * ``LinearState``, which represents facts that evolve over time
 * ``OwnableState``, which represents fungible assets
 
-We can picture the inheritance tree as follows:
+We can picture the hierarchy as follows:
 
 .. image:: resources/state-hierarchy.png
 
@@ -112,7 +110,7 @@ For example, here is a relatively complex state definition, for a state represen
 
 TransactionState
 ----------------
-Before being stored on the ledger, a ``ContractState`` is wrapped in a ``TransactionState``:
+When a ``ContractState`` is added to a ``TransactionBuilder``, it is wrapped in a ``TransactionState``:
 
 .. container:: codeset
 
