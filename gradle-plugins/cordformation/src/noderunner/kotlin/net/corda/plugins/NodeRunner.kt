@@ -64,13 +64,10 @@ private object WebJarType : JarType("corda-webserver.jar") {
 
 private abstract class JavaCommand(jarName: String, internal val dir: File, debugPort: Int?, internal val nodeName: String, init: MutableList<String>.() -> Unit, args: List<String>) {
     internal val command: List<String> = mutableListOf<String>().apply {
-        // Replace below is to fix an issue with spaces in paths on Windows. Quoting the entire path does not work, only the space or directory within the path.
-        add(File(File(System.getProperty("java.home"), "bin"), "java").path.replace(" ", "\" \""))
-        //add("java")
+        add(File(File(System.getProperty("java.home"), "bin"), "java").path)
         add("-Dname=$nodeName")
         null != debugPort && add("-Dcapsule.jvm.args=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort")
-        add("-jar")
-        add(jarName)
+        add("-jar"); add(jarName)
         init()
         addAll(args)
     }
@@ -80,17 +77,19 @@ private abstract class JavaCommand(jarName: String, internal val dir: File, debu
 }
 
 private class HeadlessJavaCommand(jarName: String, dir: File, debugPort: Int?, args: List<String>) : JavaCommand(jarName, dir, debugPort, dir.name, { add("--no-local-shell") }, args) {
-    override fun processBuilder() = ProcessBuilder(command).directory(dir).redirectError(File("error.$nodeName.log"))
+    override fun processBuilder() = ProcessBuilder(command).redirectError(File("error.$nodeName.log")).inheritIO()
 }
 
 private class TerminalWindowJavaCommand(jarName: String, dir: File, debugPort: Int?, args: List<String>) : JavaCommand(jarName, dir, debugPort, "${dir.name}-$jarName", {}, args) {
     override fun processBuilder() = ProcessBuilder(when (os) {
-        OS.MACOS -> listOf("osascript", "-e", """tell app "Terminal"
+        OS.MACOS -> {
+            listOf("osascript", "-e", """tell app "Terminal"
     activate
     tell app "System Events" to tell process "Terminal" to keystroke "t" using command down
     delay 0.5
     do script "bash -c 'cd $dir; ${command.joinToString(" ")} && exit'" in selected tab of the front window
 end tell""")
+        }
         OS.WINDOWS -> {
             listOf("cmd", "/C", "start ${command.joinToString(" ")}")
         }
