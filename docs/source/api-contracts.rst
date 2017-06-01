@@ -4,8 +4,8 @@
    <script type="text/javascript" src="_static/jquery.js"></script>
    <script type="text/javascript" src="_static/codesets.js"></script>
 
-Contracts
-=========
+API: Contracts
+==============
 
 .. note:: Before reading this page, you should be familiar with the key concepts of :doc:`key-concepts-contracts`.
 

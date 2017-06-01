@@ -7,6 +7,8 @@ Time-windows
    * *The notary is the timestamping authority, refusing to commit transactions outside of that window*
    * *Time-windows can have a start and end time, or be open at both ends*
 
+Time in a distributed system
+----------------------------
 A notary also act as the *timestamping authority*, verifying that a transaction occurred during a specific time-window
 before notarising it.
 
@@ -23,10 +25,13 @@ getting the notary to sign there may be many other steps (e.g. sending the trans
 trade, requesting human sign-off...). Thus the time at which the transaction is sent for notarisation may be quite
 different to the time at which the transaction was created.
 
+Time-windows
+------------
 For this reason, times in transactions are specified as time *windows*, not absolute times. In a distributed system
 there can never be "true time", only an approximation of it. Time windows can be open-ended (i.e. specify only one of
-"before" and "after") or they can be fully bounded. If a time window needs to be converted to an absolute time (e.g.
-for display purposes), there is a utility method to calculate the mid point.
+"before" and "after") or they can be fully bounded.
+
+.. image:: resources/time-window.gif
 
 In this way, we express the idea that the *true value* of the fact "the current time" is actually unknowable. Even when
 both a before and an after time are included, the transaction could have occurred at any point within that time-window.
@@ -38,9 +43,8 @@ modelled:
 * A transaction occurring at any time before the given time (e.g. before a bankruptcy event)
 * A transaction occurring at some point roughly around the given time (e.g. on a specific day)
 
+If a time window needs to be converted to an absolute time (e.g. for display purposes), there is a utility method to
+calculate the mid point.
+
 .. note:: It is assumed that the time feed for a notary is GPS/NaviStar time as defined by the atomic
 clocks at the US Naval Observatory. This time feed is extremely accurate and available globally for free.
-
-Also see section 7 of the `Technical white paper`_ which covers this topic in significantly more depth.
-
-.. _`Technical white paper`: _static/corda-technical-whitepaper.pdf

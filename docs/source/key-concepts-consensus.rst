@@ -25,12 +25,11 @@ and for every transaction in the transaction chain that generated the inputs to 
 It is not enough to verify the proposed transaction itself. We must also verify every transaction in the chain of
 transactions that led up to the creation of the inputs to the proposed transaction.
 
-This is known as *walking the chain*. Suppose, for example, that a party on the network proposes
-a transaction offering to exchange central-bank-issued cash for a bond. We can only be sure that the cash represents
-a valid claim on the central bank if:
+This is known as *walking the chain*. Suppose, for example, that a party on the network proposes a transaction
+transferring us a treasury bond. We can only be sure that the bond transfer is valid if:
 
-* The cash was issued by the central bank in a valid issuance transaction
-* Every subsequent transaction in which the cash changed hands was also valid
+* The treasury bond was issued by the central bank in a valid issuance transaction
+* Every subsequent transaction in which the bond changed hands was also valid
 
 The only way to be sure of both conditions is to walk the transaction's chain. We can visualize this process as follows:
 

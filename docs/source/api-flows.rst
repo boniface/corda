@@ -4,8 +4,8 @@
    <script type="text/javascript" src="_static/jquery.js"></script>
    <script type="text/javascript" src="_static/codesets.js"></script>
 
-Flows
-=====
+API: Flows
+==========
 
 .. note:: Before reading this page, you should be familiar with the key concepts of :doc:`key-concepts-flows`.
 

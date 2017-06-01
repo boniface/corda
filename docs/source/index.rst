@@ -39,15 +39,12 @@ Documentation Contents:
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting started
+   :caption: Quickstart
 
    getting-set-up
-   getting-set-up-fault-finding
-   faq
    tutorial-cordapp
    running-the-demos
    CLI-vs-IDE
-   cheat-sheet
 
 .. toctree::
    :maxdepth: 1
@@ -69,21 +66,16 @@ Documentation Contents:
 
 .. toctree::
    :maxdepth: 1
-   :caption: CorDapps
+   :caption: Building a CorDapp
 
    cordapp-overview
    writing-cordapps
-   secure-coding-guidelines
-
-.. toctree::
-   :maxdepth: 1
-   :caption: CorDapp APIs
-
    api
    api-states
    api-contracts
    api-transactions
    api-flows
+   cheat-sheet
 
 .. toctree::
    :maxdepth: 1
@@ -165,11 +157,25 @@ Documentation Contents:
 
 .. toctree::
    :maxdepth: 1
+   :caption: FAQ
+
+   faq
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Troubleshooting
+
+   troubleshooting
+
+.. toctree::
+   :maxdepth: 1
    :caption: Other
 
    clauses
    merkle-trees
    json
+   secure-coding-guidelines
+   corda-repo-layout
    building-the-docs
 
 .. toctree::

@@ -118,8 +118,12 @@ affecting how we check the validity of the transaction.
 Each command is also associated with a list of one or more *signers*. By taking the union of all the public keys
 listed in the commands, we get the list of the transaction's required signers. In our example, we might imagine that:
 
-* In a bond purchase, the owner of the cash and the owner of the bond are required to sign
-* In a coupon payment on a bond, only the payer of the coupon is required to sign
+* In a coupon payment on a bond, only the owner of the bond is required to sign
+* In a cash payment, only the owner of the cash is required to sign
+
+We can visualize this situation as follows:
+
+.. image:: resources/commands.png
 
 Attachments
 ^^^^^^^^^^^

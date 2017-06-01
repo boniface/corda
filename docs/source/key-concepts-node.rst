@@ -4,11 +4,10 @@ Nodes
 .. topic:: Summary
 
    * *A node is JVM run-time with a unique network identity running the Corda software*
-   * *The node has three interfaces with the outside world:*
+   * *The node has two interfaces with the outside world:*
 
       * *A network layer, for interacting with other nodes*
       * *RPC, for interacting with the node's owner*
-      * *JDBC, allowing the node's owner to query the persistence layer*
 
    * *The node's functionality is extended by installing CorDapps in the plugin registry*
 
@@ -36,7 +35,7 @@ The persistence layer has two parts:
 * The **vault**, where the node stores any relevant current and historic states
 * The **storage service**, where it stores transactions, attachments and flow checkpoints
 
-The node's owner can query the node's storage using either the RPC interface (see below) or the JDBC driver.
+The node's owner can query the node's storage using the RPC interface (see below).
 
 Network interface
 -----------------

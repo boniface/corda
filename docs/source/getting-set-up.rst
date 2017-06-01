@@ -3,12 +3,12 @@ Getting set up
 
 Software requirements
 ---------------------
-
-Corda uses industry-standard tools to make set-up as simple as possible. Following the software recommendations below will minimize the number of errors you encounter, and make it easier for others to provide support. However, if you do use other tools, we'd be interested to hear about any issues that arise.
+Corda uses industry-standard tools to make set-up as simple as possible. Following the software recommendations below
+will minimize the number of errors you encounter, and make it easier for others to provide support. However, if you
+do use other tools, we'd be interested to hear about any issues that arise.
 
 JVM
 ~~~
-
 Corda is written in Kotlin and runs in a JVM. We develop against Oracle JDK 8, and other JVM implementations are not actively supported.
 
 Please ensure that you keep your Oracle JDK installation updated to the latest version while working with Corda. Even earlier versions of JDK 8 versions can cause cryptic errors.
@@ -17,31 +17,36 @@ If you do choose to use OpenJDK instead of Oracle's JDK, you will also need to i
 
 Kotlin
 ~~~~~~
-
 Applications on Corda (CorDapps) can be written in any language targeting the JVM. However, Corda itself and most of
-the samples are written in Kotlin. If you're unfamiliar with Kotlin, there is an official `getting started guide <https://kotlinlang.org/docs/tutorials/>`_. You can read more about why Kotlin is a potentially strong successor to Java `here <https://medium.com/@octskyward/why-kotlin-is-my-next-programming-language-c25c001e26e3>`_.
+the samples are written in Kotlin. Kotlin is an
+`official Android language <https://developer.android.com/kotlin/index.html>`_, and you can read more about why Kotlin
+is a strong successor to Java
+`here <https://medium.com/@octskyward/why-kotlin-is-my-next-programming-language-c25c001e26e3>`_.
+
+If you're unfamiliar with Kotlin, there is an official
+`getting started guide <https://kotlinlang.org/docs/tutorials/>`_, and a series of
+`Kotlin Koans <https://kotlinlang.org/docs/tutorials/koans.html>`_.
 
 IDE
 ~~~
-
 We strongly recommend the use of IntelliJ IDEA as an IDE, primarily due to the strength of its Kotlin integration.
 
 Please make sure that you're running the latest version of IDEA, as older versions have been known to have problems integrating with Gradle, the build tool used by Corda.
 
 Git
 ~~~
-
 We use git to version-control Corda.
 
 Gradle
 ~~~~~~
-
 We use Gradle as the build tool for Corda. However, you do not need to install Gradle itself, as a wrapper is provided.
 
 Set-up instructions
 -------------------
 
-The instructions below will allow you to set up a Corda development environment and run a basic CorDapp on a Windows or Mac machine. If you have any issues, please consult the :doc:`getting-set-up-fault-finding` page, or reach out on `Slack <http://slack.corda.net/>`_ or the `forums <https://discourse.corda.net/>`_.
+The instructions below will allow you to set up a Corda development environment and run a basic CorDapp on a Windows
+or Mac machine. If you have any issues, please consult the :doc:`troubleshooting` page, or reach out on
+`Slack <http://slack.corda.net/>`_ or the `forums <https://discourse.corda.net/>`_.
 
 Windows
 ~~~~~~~
@@ -165,5 +170,5 @@ The best way to check that everything is working fine is by :doc:`running-the-de
 Once you have these demos running, you may be interested in writing your own CorDapps, in which case you should refer to 
 :doc:`tutorial-cordapp`.
 
-If you encounter any issues, please see the :doc:`getting-set-up-fault-finding` page, or get in touch with us on the 
+If you encounter any issues, please see the :doc:`troubleshooting` page, or get in touch with us on the
 `forums <https://discourse.corda.net/>`_ or via `slack <http://slack.corda.net/>`_.
