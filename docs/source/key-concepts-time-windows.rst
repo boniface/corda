@@ -5,7 +5,7 @@ Time-windows
 
    * *If a transaction includes a time-window, it can only be committed during that window*
    * *The notary is the timestamping authority, refusing to commit transactions outside of that window*
-   * *Time-windows can have a start and end time, or be open at both ends*
+   * *Time-windows can have a start and end time, or be open at either end*
 
 Time in a distributed system
 ----------------------------

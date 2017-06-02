@@ -54,13 +54,13 @@ Documentation Contents:
    key-concepts-ecosystem
    key-concepts-ledger
    key-concepts-states
-   key-concepts-transactions
    key-concepts-contracts
-   key-concepts-oracles
+   key-concepts-transactions
+   key-concepts-flows
    key-concepts-consensus
    key-concepts-notaries
    key-concepts-time-windows
-   key-concepts-flows
+   key-concepts-oracles
    key-concepts-node
    key-concepts-tradeoffs
 
