@@ -214,7 +214,7 @@ We have four fields in our state:
   relationships such as a derivative contract.
 * ``faceValue``, an ``Amount<Issued<Currency>>``, which wraps an integer number of pennies and a currency that is
   specific to some issuer (e.g. a regular bank, a central bank, etc). You can read more about this very common
-  type in :doc:`core-types`.
+  type in :doc:`api-core-types`.
 * ``maturityDate``, an `Instant <https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html>`_, which is a type
   from the Java 8 standard time library. It defines a point on the timeline.
 

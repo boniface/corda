@@ -333,13 +333,17 @@ fun ContractState.hash(): SecureHash = SecureHash.sha256(serialize().bytes)
  * transaction defined the state and where in that transaction it was.
  */
 @CordaSerializable
+// DOCSTART 8
 data class StateRef(val txhash: SecureHash, val index: Int) {
     override fun toString() = "$txhash($index)"
 }
+// DOCEND 8
 
 /** A StateAndRef is simply a (state, ref) pair. For instance, a vault (which holds available assets) contains these. */
 @CordaSerializable
+// DOCSTART 7
 data class StateAndRef<out T : ContractState>(val state: TransactionState<T>, val ref: StateRef)
+// DOCEND 7
 
 /** Filters a list of [StateAndRef] objects according to the type of the states */
 inline fun <reified T : ContractState> Iterable<StateAndRef<ContractState>>.filterStatesOfType(): List<StateAndRef<T>> {
@@ -369,7 +373,9 @@ abstract class TypeOnlyCommandData : CommandData {
 
 /** Command data/content plus pubkey pair: the signature is stored at the end of the serialized bytes */
 @CordaSerializable
+// DOCSTART 9
 data class Command(val value: CommandData, val signers: List<PublicKey>) {
+// DOCEND 9
     init {
         require(signers.isNotEmpty())
     }

@@ -9,24 +9,16 @@ API: Flows
 
 .. note:: Before reading this page, you should be familiar with the key concepts of :doc:`key-concepts-flows`.
 
-FlowLogic
----------
-A flow is implemented in code as one or more ``FlowLogic`` subclasses that communicate to handle a specific business
-process. Each ``FlowLogic`` subclass must override ``FlowLogic.call()``, which describes the actions it will take as
-part of the flow.
-
 An example flow
-^^^^^^^^^^^^^^^
-As an example, let's design a flow for agreeing a basic ledger update between Alice and Bob. This flow will be
-composed of two flow classes:
+---------------
+Let's imagine a flow for agreeing a basic ledger update between Alice and Bob. This flow will have two sides:
 
-* An ``Initiator`` ``FlowLogic`` subclass, that will initiate the request to update the ledger
-* A ``Responder`` ``FlowLogic`` subclass, that will respond to the request to update the ledger
+* An ``Initiator`` side, that will initiate the request to update the ledger
+* A ``Responder`` side, that will respond to the request to update the ledger
 
 Initiator
-~~~~~~~~~
-In our flow, the Initiator flow class will be doing the majority of the work. We therefore override ``Initiator.call``
-to undertake the following steps:
+^^^^^^^^^
+In our flow, the Initiator flow class will be doing the majority of the work:
 
 *Part 1 - Build the transaction*
 
@@ -60,16 +52,13 @@ to undertake the following steps:
 16. Store any relevant states in the vault
 17. Send the transaction to the counterparty for recording
 
-We can visualize the work performed by ``Initiator.call`` as follows:
+We can visualize the work performed by initiator as follows:
 
 .. image:: resources/flow-overview.png
 
-In practice, parts 2 - 4 should be handled by invoking ``CollectSignaturesFlow`` as a subflow, and part 5 should be
-handled by invoking ``FinalityFlow`` as a subflow (see subflow_ for details).
-
 Responder
-~~~~~~~~~
-To respond to these actions, we override  ``Responder.call`` to take the following steps:
+^^^^^^^^^
+To respond to these actions, the responder takes the following steps:
 
 *Part 1 - Sign the transaction*
 
@@ -85,20 +74,52 @@ To respond to these actions, we override  ``Responder.call`` to take the followi
 7. Record the transaction locally
 8. Store any relevant states in the vault
 
-In practice, part 1 should be handled by invoking ``SignTransactionFlow`` as a subflow. Part 2 will be handled
-automatically by our node when the counterparty invokes ``FinalityFlow``.
+FlowLogic
+---------
+In practice, a flow is implemented as one or more communicating ``FlowLogic`` subclasses. Each ``FlowLogic`` subclass
+must override ``FlowLogic.call()``, which describes the actions it will take as part of the flow.
 
-Flow automation
-^^^^^^^^^^^^^^^
-In practice, many of the actions in a flow can (and should) be automated using built-in flows called *subflows* (see
-subflow_ for details).
+So in the example above, we would have an ``Initiator`` ``FlowLogic`` subclass and a ``Responder`` ``FlowLogic``
+subclass. The actions of the initiator's side of the flow would be defined in ``Initiator.call``, and the actions
+of the responder's side of the flow would be defined in ``Responder.call``.
 
-In the example above:
+FlowLogic annotations
+^^^^^^^^^^^^^^^^^^^^^
+Any flow that you wish to start either directly via RPC or as a subflow must be annotated with the
+``@InitiatingFlow`` annotation. Additionally, if you wish to start the flow via RPC, you must annotate it with the
+``@StartableByRPC`` annotation.
 
-* Parts 2-4 of the Initiator side should be automated by invoking ``CollectSignaturesFlow``
-* Part 5 of the Initiator side should be automated by invoking ``FinalityFlow``
-* Part 1 of the Responder side should be automated by invoking ``SignTransactionFlow``
-* Part 2 of the Responder will be handled automatically when the counterparty invokes ``FinalityFlow``
+Any flow that responds to a message from another flow must be annotated with the ``@InitiatedBy`` annotation.
+``@InitiatedBy`` takes the class of the flow it is responding to as its single parameter.
+
+So in our example, we would have:
+
+.. container:: codeset
+
+   .. sourcecode:: kotlin
+
+        @InitiatingFlow
+        @StartableByRPC
+        class Initiator(): FlowLogic<Unit>() {
+
+        ...
+
+        @InitiatedBy(Initiator::class)
+        class Responder(val otherParty: Party) : FlowLogic<Unit>() {
+
+   .. sourcecode:: java
+
+        @InitiatingFlow
+        @StartableByRPC
+        public static class Initiator extends FlowLogic<Unit> {
+
+        ...
+
+        @InitiatedBy(Initiator.class)
+        public static class Responder extends FlowLogic<Void> {
+
+Additionally, any flow that is started by a ``SchedulableState`` must be annotated with the ``@SchedulableFlow``
+annotation.
 
 ServiceHub
 ----------
@@ -132,7 +153,7 @@ Some common tasks performed using the ``ServiceHub`` are:
 Common flow tasks
 -----------------
 There are a number of common tasks that you will need to perform within ``FlowLogic.call`` in order to agree ledger
-updates. This section details the API for the most common tasks:
+updates. This section details the API for the most common tasks.
 
 Communication between parties
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -145,8 +166,9 @@ Communication between parties
 * ``sendAndReceive(receiveType: Class<R>, otherParty: Party, payload: Any)``
     * Sends the ``payload`` object to the ``otherParty``, and receives an object of type ``receiveType`` back
 
-Each ``FlowLogic`` subclass can be annotated to respond to messages from a given *counterparty* flow. When a node
-first receives a message from a given ``FlowLogic.call()`` invocation, it responds as follows:
+Each ``FlowLogic`` subclass can be annotated to respond to messages from a given *counterparty* flow using the
+``@InitiatedBy`` annotation. When a node first receives a message from a given ``FlowLogic.call()`` invocation, it
+responds as follows:
 
 * The node checks whether they have a ``FlowLogic`` subclass that is registered to respond to the ``FlowLogic`` that
   is sending the message:
@@ -217,112 +239,18 @@ We use the network map to retrieve information about other nodes on the network:
         final NodeInfo alice = networkMap.getNodeByLegalName(new X500Name("CN=Alice,O=Alice,L=London,C=UK"));
         final NodeInfo bob = networkMap.getNodeByLegalIdentityKey(bobsKey);
 
-Verifying a transaction
-^^^^^^^^^^^^^^^^^^^^^^^
-We verify a transaction as follows:
-
-* Before verifying a transaction chain, we need to retrieve from the proposer(s) of the transaction any parts of the
-  transaction chain that our node doesn't currently have in its local storage:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        subFlow(ResolveTransactionsFlow(transactionToVerify, partyWithTheFullChain))
-
-   .. sourcecode:: java
-
-        subFlow(new ResolveTransactionsFlow(transactionToVerify, partyWithTheFullChain));
-
-* We then verify the transaction as follows:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        partSignedTx.toWireTransaction().toLedgerTransaction(serviceHub).verify()
-
-   .. sourcecode:: java
-
-        partSignedTx.toWireTransaction().toLedgerTransaction(getServiceHub()).verify();
-
-* We will generally also want to conduct some custom validation of the transaction, beyond what is provided for in the
-  contract:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        val ledgerTransaction = partSignedTx.tx.toLedgerTransaction(serviceHub)
-        val inputStateAndRef = ledgerTransaction.inputs.single()
-        val input = inputStateAndRef.state.data as MyState
-        if (input.value > 1000000) {
-            throw FlowException("Proposed input value too high!")
-        }
-
-   .. sourcecode:: java
-
-        final LedgerTransaction ledgerTransaction = partSignedTx.getTx().toLedgerTransaction(getServiceHub());
-        final StateAndRef inputStateAndRef = ledgerTransaction.getInputs().get(0);
-        final MyState input = (MyState) inputStateAndRef.getState().getData();
-        if (input.getValue() > 1000000) {
-            throw new FlowException("Proposed input value too high!");
-        }
-
-Signing a transaction
-^^^^^^^^^^^^^^^^^^^^^
-We sign a transaction as follows:
-
-* Initially, a ``SignedTransaction`` is generated from a ``TransactionBuilder`` using:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        val partSignedTx = serviceHub.signInitialTransaction(unsignedTx)
-
-   .. sourcecode:: java
-
-        final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(unsignedTx);
-
-* Once a ``SignedTransaction`` has been created, we add additional signatures using:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        val fullySignedTx = serviceHub.addSignature(partSignedTx)
-
-   .. sourcecode:: java
-
-        SignedTransaction fullySignedTx = getServiceHub().addSignature(partSignedTx);
-
-* We can also generate a signature without adding it to the transaction using:
-
-.. container:: codeset
-
-   .. sourcecode:: kotlin
-
-        val signature = serviceHub.createSignature(partSignedTx)
-
-   .. sourcecode:: java
-
-        DigitalSignature.WithKey signature = getServiceHub().createSignature(partSignedTx);
-
-.. _subflows:
-
 Subflows
 --------
-Corda provides a number of built-in flows for handling common tasks. The most important are:
+Corda provides a number of built-in flows that should be used for handling common tasks. The most important are:
 
-* ``CollectSignaturesFlow``, to collect a transaction's required signatures
-* ``FinalityFlow``, to notarise and record a transaction
-* ``ResolveTransactionsFlow``, to verify the chain of inputs to a transaction
-* ``ContractUpgradeFlow``, to change a state's contract
-* ``NotaryChangeFlow``, to change a state's notary
+* ``CollectSignaturesFlow``, which should be used to collect a transaction's required signatures
+* ``FinalityFlow``, which should be used to notarise and record a transaction
+* ``ResolveTransactionsFlow``, which should be used to verify the chain of inputs to a transaction
+* ``ContractUpgradeFlow``, which should be used to change a state's contract
+* ``NotaryChangeFlow``, which should be used to change a state's notary
 
-These flows are designed to be used as building blocks in your own flows. You do so by calling ``FlowLogic.subFlow()``
-from within your flow's ``call()`` method. Here is an example from ``TwoPartyDealFlow.kt``:
+These flows are designed to be used as building blocks in your own flows. You invoke them by calling
+``FlowLogic.subFlow`` from within your flow's ``call()`` method. Here is an example from ``TwoPartyDealFlow.kt``:
 
 .. container:: codeset
 
@@ -335,10 +263,19 @@ from within your flow's ``call()`` method. Here is an example from ``TwoPartyDea
 In this example, we are starting a ``CollectSignaturesFlow``, passing in a partially signed transaction, and
 receiving back a fully-signed version of the same transaction.
 
+Subflows in our example flow
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In practice, many of the actions in our example flow would be automated using subflows:
+
+* Parts 2-4 of ``Initiator.call`` should be automated by invoking ``CollectSignaturesFlow``
+* Part 5 of ``Initiator.call`` should be automated by invoking ``FinalityFlow``
+* Part 1 of ``Responder.call`` should be automated by invoking ``SignTransactionFlow``
+* Part 2 of ``Responder.call`` will be handled automatically when the counterparty invokes ``FinalityFlow``
+
 FlowException
 -------------
 Suppose a node throws an exception while running a flow. Any counterparty flows waiting for a message from the node
-(i.e. as part of a call to ``receive()`` or ``sendAndReceive()``) will be notified that the flow has unexpectedly
+(i.e. as part of a call to ``receive`` or ``sendAndReceive``) will be notified that the flow has unexpectedly
 ended and will themselves end. However, the exception thrown will not be propagated back to the counterparties.
 
 If you wish to notify any waiting counterparties of the cause of the exception, you can do so by throwing a

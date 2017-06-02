@@ -1,5 +1,5 @@
-Core types
-==========
+API: Core types
+===============
 
 Corda provides a large standard library of data types used to represent the Corda data model. In addition, there are a
 series of helper libraries which provide date manipulation, maths and cryptography functions.
@@ -9,22 +9,8 @@ State and References
 State objects contain mutable data which we would expect to evolve over the lifetime of a contract.
 
 A reference to a state in the ledger (whether it has been consumed or not) is represented with a ``StateRef`` object.
-If the state ref has been looked up from storage, you will have a ``StateAndRef`` which is simply a ``StateRef`` plus the data.
-
-The ``ContractState`` type is an interface that all states must implement. A ``TransactionState`` is a simple
-container for a ``ContractState`` (the custom data used by a contract program) and additional platform-level state
-information, such as the *notary* pointer (see :doc:`key-concepts-notaries`).
-
-A number of interfaces then extend ``ContractState``, representing standardised functionality for common kinds
-of state such as:
-
-      ``OwnableState``
-      A state which has an owner (represented as a ``PublicKey`` which can be a ``CompositeKey``, discussed later). Exposes the owner and a function
-      for replacing the owner e.g. when an asset is sold.
-
-      ``SchedulableState``
-      A state to indicate whether there is some activity to be performed at some future point in time with respect to this
-      contract, what that activity is and at what point in time it should be initiated.
+If the state ref has been looked up from storage, you will have a ``StateAndRef`` which is simply a ``StateRef`` plus
+the data.
 
 NamedByHash and UniqueIdentifier
 --------------------------------

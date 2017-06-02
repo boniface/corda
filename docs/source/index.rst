@@ -75,6 +75,7 @@ Documentation Contents:
    api-contracts
    api-transactions
    api-flows
+   api-core-types
    cheat-sheet
 
 .. toctree::
@@ -141,7 +142,6 @@ Documentation Contents:
 
    flow-library
    contract-catalogue
-   core-types
    financial-model
    contract-irs
 

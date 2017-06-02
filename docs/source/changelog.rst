@@ -478,7 +478,7 @@ New features in this release:
       are trees of public keys in which interior nodes can have validity thresholds attached, thus allowing
       boolean formulas of keys to be created. This is similar to Bitcoin's multi-sig support and the data model
       is the same as the InterLedger Crypto-Conditions spec, which should aid interop in future. Read more about
-      key trees in the ":doc:`core-types`" article.
+      key trees in the ":doc:`api-core-types`" article.
     * A new tutorial has been added showing how to use transaction attachments in more detail.
 
 * Testnet
